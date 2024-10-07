@@ -45,7 +45,7 @@ struct Villager {
 };
 
 // Function declaration for PlayerCreation
-void PlayerCreation(Player &player, Enemies &entity, Mineral &mineral, Tree &tree, Villager &villager);
+void PlayerCreation(Player &player, std::vector<Enemies> &enemies, std::vector<Mineral> &minerals, std::vector<Tree> &trees, std::vector<Villager> &villagers);
 
 void DrawEntities(const std::vector<Mineral>& minerals, 
                   const std::vector<Tree>& trees, 
