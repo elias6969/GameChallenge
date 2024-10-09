@@ -187,11 +187,11 @@ int main(void)
 		"Trader Joe",	  // Name
 		true			  // Can trade
 	};
-    
+
 	// If you want to use vectors for multiple instances:
 	std::vector<Mineral> minerals = {
 		{{100.0f, 150.0f}, YELLOW, "Gold"},
-		{{200.0f, 250.0f}, LIGHTGRAY, "Silver"}};
+		{{200.0f, 250.0f}, DARKGRAY, "Silver"}};
 
 	std::vector<Tree> trees = {
 		{{300.0f, 350.0f}, BROWN, "Oak"},
@@ -202,15 +202,45 @@ int main(void)
 		{{600.0f, 650.0f}, DARKGRAY, "Orc"}};
 
 	std::vector<Villager> villagers = {
+		// POSITION       COLOR    NAME       TRADEABLE
 		{{700.0f, 750.0f}, BLUE, "Trader Joe", true},
 		{{800.0f, 850.0f}, GREEN, "Merchant Mike", false}};
 
+	// Variables for the inventory grid
+	int slotsX = 5;			   // Number of slots horizontally
+	int slotsY = 4;			   // Number of slots vertically
+	float slotSize = 50.0f;	   // Width and height of each slot
+	float slotPadding = 10.0f; // Padding between slots
+
+	// Vector to hold the inventory slots
+	std::vector<InventorySlot> inventories;
+
+	// Initialize the inventory
+	init(inventories, slotsX, slotsY, slotSize, slotPadding, GetScreenHeight());
+	bool showinventory = false;
+    
+	//Texture loading
+	Texture2D gold = LoadTexture("C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/resources/Assets/Crafting&Gathering/Gold.png");
+	// MAIN LOOP
 	while (!WindowShouldClose())
 	{
 		BeginDrawing();
 		ClearBackground(BLACK);
-        PlayerCreation(player, enemies, minerals, trees, villagers);
-        DrawEntities(minerals, trees, enemies, villagers);
+		DrawFPS(10, 10);
+		if (IsKeyPressed(KEY_E))
+		{
+			showinventory = true;
+		}
+		else if (IsKeyPressed(KEY_Q))
+		{
+			showinventory = false;
+		}
+		if (showinventory)
+		{
+			//DrawInventory(inventories);
+		}
+		PlayerCreation(player, enemies, minerals, trees, villagers, inventories);
+		DrawEntities(minerals, trees, enemies, villagers);
 #pragma region imgui
 		rlImGuiBegin();
 
@@ -238,7 +268,7 @@ int main(void)
 
 		EndDrawing();
 	}
-
+    Delete(gold);
 #pragma region imgui
 	rlImGuiShutdown();
 #pragma endregion

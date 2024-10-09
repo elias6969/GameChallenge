@@ -46,18 +46,26 @@ struct Villager {
 
 struct InventorySlot {
     bool hasItem; // Does this slot have an item?
+    const char* Itemtype;
     Rectangle rect; // Visual rectangle for the slot
     Color color;    // Color to represent item or empty
 };
+extern std::string storedPathTexture;
 
-void init(InventorySlot &invetory);
+void init(std::vector<InventorySlot> &inventories, int slotsX, int slotsY, float slotSize, float slotPadding, int screenHeight);
+
+void DrawInventory(const std::vector<InventorySlot>& inventories);
 
 // Function declaration for PlayerCreation
-void PlayerCreation(Player &player, std::vector<Enemies> &enemies, std::vector<Mineral> &minerals, std::vector<Tree> &trees, std::vector<Villager> &villagers);
+void PlayerCreation(Player &player, std::vector<Enemies> &enemies, std::vector<Mineral> &minerals, std::vector<Tree> &trees, std::vector<Villager> &villagers, std::vector<InventorySlot> &inventory);
 
 void DrawEntities(const std::vector<Mineral>& minerals, 
                   const std::vector<Tree>& trees, 
                   const std::vector<Enemies>& enemies, 
                   const std::vector<Villager>& villagers);
 
-#endif // GAMEHEADER_H
+std::string getString();
+
+void Delete(Texture2D mineraltexture);
+
+#endif
