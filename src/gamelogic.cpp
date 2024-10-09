@@ -1,25 +1,94 @@
 #include <raylib.h>
 #include <iostream>
 #include <vector>
-#include <GameHeader.h>
 #include <cmath>
-#include <math.h>
+#include "GameHeader.h"
 
-bool down = false;
-bool up = false;
-bool left = false;
-bool right = false;
+const int slotsX = 5; // How many slots in X direction
+const int slotsY = 3; // How many slots in Y direction
+const int slotSize = 100; // Size of each slot
+const int slotPadding = 10; // Padding between slots
 
-bool brokentree = false;
+std::vector<InventorySlot> inventories;
 
-void PlayerCreation(Player &player, Enemies &entity, Mineral &mineral, Tree &tree, Villager &villager)
+void init(InventorySlot &inventory){
+   
+    // Set up inventory grid
+    for (int y = 0; y < slotsY; y++) {
+        for (int x = 0; x < slotsX; x++) {
+            InventorySlot slot;
+            slot.hasItem = false; // Initially no item
+            slot.rect = { 
+                (float)x * (slotSize + slotPadding) + 100, // X Position with padding
+                (float)y * (slotSize + slotPadding) + 100, // Y Position with padding
+                (float)slotSize, (float)slotSize
+            };
+            slot.color = LIGHTGRAY; // Default empty slot color
+            inventories.push_back(slot);
+        }
+    }
+}
+// Helper function to calculate distance between two points
+inline float CalculateDistance(const Vector2 &p1, const Vector2 &p2)
 {
-    float deltaTime = GetFrameTime(); // Get frame time for smooth movement
+    return sqrtf(powf(p1.x - p2.x, 2) + powf(p1.y - p2.y, 2));
+}
+
+// Templated function to handle interaction for all entities except Enemies
+template <typename Entity>
+void HandleInteraction(const Player &player, const Entity &entity, const Vector2 &interactionPoint, const char *action, float interactionRadius)
+{
+    float distance = CalculateDistance(entity.position, interactionPoint);
+    if (distance <= interactionRadius && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    {
+        std::cout << action << " " << entity.type << std::endl;
+    }
+}
+
+// Overloaded function for Enemies since they use 'Position' instead of 'position'
+void HandleInteraction(const Player &player, const Enemies &enemy, const Vector2 &interactionPoint, const char *action, float interactionRadius)
+{
+    float distance = CalculateDistance(enemy.Position, interactionPoint);
+    if (distance <= interactionRadius && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    {
+        std::cout << action << " " << enemy.type << std::endl;
+    }
+}
+
+// Templated function to draw any entity
+template <typename Entity>
+void DrawEntity(const Entity &entity)
+{
+    DrawCircleV(entity.position, 10.0f, entity.color); // For entities that have 'position'
+    DrawText(entity.type, entity.position.x - 15, entity.position.y - 15, 10, WHITE);
+}
+
+// Overloaded function for Enemies to use 'Position' field
+void DrawEntity(const Enemies &enemy)
+{
+    DrawCircleV(enemy.Position, 10.0f, enemy.color); // For 'Enemies', use 'Position'
+    DrawText(enemy.type, enemy.Position.x - 15, enemy.Position.y - 15, 10, WHITE);
+}
+
+// Special draw function for Villagers to use 'name' instead of 'type'
+void DrawVillager(const Villager &villager)
+{
+    DrawCircleV(villager.position, 10.0f, villager.color);
+    DrawText(villager.name, villager.position.x - 15, villager.position.y - 15, 10, WHITE);
+}
+
+// Function for player movement and interaction handling
+void PlayerCreation(Player &player, std::vector<Enemies> &enemies, std::vector<Mineral> &minerals, std::vector<Tree> &trees, std::vector<Villager> &villagers)
+{
+    float deltaTime = GetFrameTime(); // Time step for consistent movement
+
+    // Define interaction points around the player
     Vector2 UpPoint = {player.PlayerPosition.x, player.PlayerPosition.y - 50.0f};
-    Vector2 downPoint = {player.PlayerPosition.x, player.PlayerPosition.y + 50.0f};
-    Vector2 rightpoint = {player.PlayerPosition.x + 50.0f, player.PlayerPosition.y};
-    Vector2 leftpoint = {player.PlayerPosition.x - 50.0f, player.PlayerPosition.y};
-    // Movement keys
+    Vector2 DownPoint = {player.PlayerPosition.x, player.PlayerPosition.y + 50.0f};
+    Vector2 RightPoint = {player.PlayerPosition.x + 50.0f, player.PlayerPosition.y};
+    Vector2 LeftPoint = {player.PlayerPosition.x - 50.0f, player.PlayerPosition.y};
+
+    // Handle player movement based on WASD keys
     if (IsKeyDown(KEY_W))
     {
         player.PlayerPosition.y -= player.Speed * deltaTime;
@@ -28,137 +97,89 @@ void PlayerCreation(Player &player, Enemies &entity, Mineral &mineral, Tree &tre
     if (IsKeyDown(KEY_S))
     {
         player.PlayerPosition.y += player.Speed * deltaTime;
-        DrawLineV(player.PlayerPosition, downPoint, RED);
+        DrawLineV(player.PlayerPosition, DownPoint, RED);
     }
     if (IsKeyDown(KEY_D))
     {
         player.PlayerPosition.x += player.Speed * deltaTime;
-        DrawLineV(player.PlayerPosition, rightpoint, RED);
+        DrawLineV(player.PlayerPosition, RightPoint, RED);
     }
     if (IsKeyDown(KEY_A))
     {
         player.PlayerPosition.x -= player.Speed * deltaTime;
-        DrawLineV(player.PlayerPosition, leftpoint, RED);
+        DrawLineV(player.PlayerPosition, LeftPoint, RED);
     }
 
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-    {
-        std::cout << "Attacked" << std::endl;
-    }
-
-    Vector2 playerSize = {0.3f, 0.3f};
-
-    if (CheckCollisionCircles(player.PlayerPosition, 20.0f, entity.Position, 20.0f))
-    {
-        std::cout << "collided with enemies" << std::endl;
-    }
-    // Enemies distance
-    float distanceUpEnemy = sqrtf(powf(entity.Position.x - UpPoint.x, 2) + powf(entity.Position.y - UpPoint.y, 2));
-    float distanceDownEnemy = sqrtf(powf(entity.Position.x - downPoint.x, 2) + powf(entity.Position.y - downPoint.y, 2));
-    float distanceRightEnemy = sqrtf(powf(entity.Position.x - rightpoint.x, 2) + powf(entity.Position.y - rightpoint.y, 2));
-    float distanceLeftEnemy = sqrtf(powf(entity.Position.x - leftpoint.x, 2) + powf(entity.Position.y - leftpoint.y, 2));
-    // Mineral distance
-    float distanceUpMineral = sqrtf(powf(mineral.position.x - UpPoint.x, 2) + powf(mineral.position.y - UpPoint.y, 2));
-    float distanceDownMineral = sqrtf(powf(mineral.position.x - downPoint.x, 2) + powf(mineral.position.y - downPoint.y, 2));
-    float distanceRightMineral = sqrtf(powf(mineral.position.x - rightpoint.x, 2) + powf(mineral.position.y - rightpoint.y, 2));
-    float distanceLeftMineral = sqrtf(powf(mineral.position.x - leftpoint.x, 2) + powf(mineral.position.y - leftpoint.y, 2));
-    // Tree distance calculations
-    float distanceUpTree = sqrtf(powf(tree.position.x - UpPoint.x, 2) + powf(tree.position.y - UpPoint.y, 2));
-    float distanceDownTree = sqrtf(powf(tree.position.x - downPoint.x, 2) + powf(tree.position.y - downPoint.y, 2));
-    float distanceRightTree = sqrtf(powf(tree.position.x - rightpoint.x, 2) + powf(tree.position.y - rightpoint.y, 2));
-    float distanceLeftTree = sqrtf(powf(tree.position.x - leftpoint.x, 2) + powf(tree.position.y - leftpoint.y, 2));
-    // Villager distance calculations
-    float distanceUpVillager = sqrtf(powf(villager.position.x - UpPoint.x, 2) + powf(villager.position.y - UpPoint.y, 2));
-    float distanceDownVillager = sqrtf(powf(villager.position.x - downPoint.x, 2) + powf(villager.position.y - downPoint.y, 2));
-    float distanceRightVillager = sqrtf(powf(villager.position.x - rightpoint.x, 2) + powf(villager.position.y - rightpoint.y, 2));
-    float distanceLeftVillager = sqrtf(powf(villager.position.x - leftpoint.x, 2) + powf(villager.position.y - leftpoint.y, 2));
-
-    if (distanceRightMineral <= 20.0f)
-    {
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-        {
-            std::cout << "Collecting " << mineral.type << std::endl;
-        }
-    }
-
-    if (distanceRightEnemy <= 20.0f)
-    {
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-        {
-            std::cout << "Attacking " << "Goblin" << std::endl; // Replace with your enemy type if applicable
-        }
-    }
-
-    if (distanceRightTree <= 20.0f)
-    {
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-        {
-            std::cout << "Chopping down " << tree.type << std::endl;
-        }
-    }
-    
-    if (distanceRightVillager <= 20.0f)
-    {
-        if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
-        {
-            std::cout << "Interacting with " << villager.name << std::endl;
-        }
-    }
-
+    // Draw the player using texture
+    // DrawTexture(player.texture, player.PlayerPosition.x - player.widthofplayer / 2, player.PlayerPosition.y - player.heightofplayer / 2, WHITE);
     DrawCircleV(player.PlayerPosition, 20.0f, WHITE);
-    DrawCircleV(entity.Position, 20.0f, GREEN);
+
+    // Handle interaction and drawing for enemies
+    for (const Enemies &enemy : enemies)
+    {
+        HandleInteraction(player, enemy, RightPoint, "Attacking", 20.0f);
+        DrawEntity(enemy);
+    }
+
+    // Handle interaction and drawing for minerals
+    for (const Mineral &mineral : minerals)
+    {
+        HandleInteraction(player, mineral, RightPoint, "Collecting", 20.0f);
+        DrawEntity(mineral);
+    }
+
+    // Handle interaction and drawing for trees
+    for (const Tree &tree : trees)
+    {
+        HandleInteraction(player, tree, RightPoint, "Chopping down", 20.0f);
+        DrawEntity(tree);
+    }
+
+    // Handle interaction and drawing for villagers
+    for (const Villager &villager : villagers)
+    {
+        float distance = CalculateDistance(villager.position, RightPoint);
+        if (distance <= 20.0f && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+        {
+            if (villager.canTrade)
+            {
+                std::cout << "Trading with " << villager.name << std::endl;
+            }
+            else
+            {
+                std::cout << "Talking to " << villager.name << std::endl;
+            }
+        }
+        DrawVillager(villager);
+    }
 }
 
-// Function to draw minerals
-void DrawMineral(const Mineral &mineral)
-{
-    DrawCircleV(mineral.position, 10.0f, mineral.color);
-    DrawText(mineral.type, mineral.position.x - 15, mineral.position.y - 15, 10, WHITE);
-}
-
-// Function to draw trees
-void DrawTree(const Tree &tree)
-{
-    DrawRectangleV(tree.position, {20.0f, 40.0f}, tree.color);                         // Draw the trunk
-    DrawCircleV({tree.position.x + 10.0f, tree.position.y - 20.0f}, 20.0f, DARKGREEN); // Draw the leaves
-    DrawText(tree.type, tree.position.x - 15, tree.position.y + 5, 10, WHITE);
-}
-
-// Function to draw enemies
-void DrawEnemy(const Enemies &enemy)
-{
-    DrawCircleV(enemy.Position, 10.0f, enemy.color);
-    DrawText(enemy.type, enemy.Position.x - 15, enemy.Position.y - 15, 10, WHITE);
-}
-
-// Function to draw villagers
-void DrawVillager(const Villager &villager)
-{
-    DrawCircleV(villager.position, 10.0f, villager.color);
-    DrawText(villager.name, villager.position.x - 15, villager.position.y - 15, 10, WHITE);
-}
-
-// Example of how to create and draw these entities
+// Function to draw all entities in their respective groups
 void DrawEntities(const std::vector<Mineral> &minerals,
                   const std::vector<Tree> &trees,
                   const std::vector<Enemies> &enemies,
                   const std::vector<Villager> &villagers)
 {
+
+    // Draw minerals
     for (const auto &mineral : minerals)
     {
-        DrawMineral(mineral);
+        DrawEntity(mineral);
     }
 
+    // Draw trees
     for (const auto &tree : trees)
     {
-        DrawTree(tree);
+        DrawEntity(tree);
     }
 
+    // Draw enemies
     for (const auto &enemy : enemies)
     {
-        DrawEnemy(enemy);
+        DrawEntity(enemy);
     }
 
+    // Draw villagers
     for (const auto &villager : villagers)
     {
         DrawVillager(villager);

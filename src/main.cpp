@@ -209,7 +209,7 @@ int main(void)
 	{
 		BeginDrawing();
 		ClearBackground(BLACK);
-		PlayerCreation(player, entity, mineral, tree, villager);
+        PlayerCreation(player, enemies, minerals, trees, villagers);
         DrawEntities(minerals, trees, enemies, villagers);
 #pragma region imgui
 		rlImGuiBegin();
