@@ -68,11 +68,26 @@ include CMakeFiles/mygame.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/mygame.dir/flags.make
 
+CMakeFiles/mygame.dir/src/Map_generation.cpp.obj: CMakeFiles/mygame.dir/flags.make
+CMakeFiles/mygame.dir/src/Map_generation.cpp.obj: CMakeFiles/mygame.dir/includes_CXX.rsp
+CMakeFiles/mygame.dir/src/Map_generation.cpp.obj: C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/src/Map_generation.cpp
+CMakeFiles/mygame.dir/src/Map_generation.cpp.obj: CMakeFiles/mygame.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\elias\Downloads\GameChallenge\raylibCmakeSetup-master\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/mygame.dir/src/Map_generation.cpp.obj"
+	C:\msys64\ucrt64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mygame.dir/src/Map_generation.cpp.obj -MF CMakeFiles\mygame.dir\src\Map_generation.cpp.obj.d -o CMakeFiles\mygame.dir\src\Map_generation.cpp.obj -c C:\Users\elias\Downloads\GameChallenge\raylibCmakeSetup-master\src\Map_generation.cpp
+
+CMakeFiles/mygame.dir/src/Map_generation.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/mygame.dir/src/Map_generation.cpp.i"
+	C:\msys64\ucrt64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\elias\Downloads\GameChallenge\raylibCmakeSetup-master\src\Map_generation.cpp > CMakeFiles\mygame.dir\src\Map_generation.cpp.i
+
+CMakeFiles/mygame.dir/src/Map_generation.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/mygame.dir/src/Map_generation.cpp.s"
+	C:\msys64\ucrt64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\elias\Downloads\GameChallenge\raylibCmakeSetup-master\src\Map_generation.cpp -o CMakeFiles\mygame.dir\src\Map_generation.cpp.s
+
 CMakeFiles/mygame.dir/src/gamelogic.cpp.obj: CMakeFiles/mygame.dir/flags.make
 CMakeFiles/mygame.dir/src/gamelogic.cpp.obj: CMakeFiles/mygame.dir/includes_CXX.rsp
 CMakeFiles/mygame.dir/src/gamelogic.cpp.obj: C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/src/gamelogic.cpp
 CMakeFiles/mygame.dir/src/gamelogic.cpp.obj: CMakeFiles/mygame.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\elias\Downloads\GameChallenge\raylibCmakeSetup-master\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/mygame.dir/src/gamelogic.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\elias\Downloads\GameChallenge\raylibCmakeSetup-master\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/mygame.dir/src/gamelogic.cpp.obj"
 	C:\msys64\ucrt64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mygame.dir/src/gamelogic.cpp.obj -MF CMakeFiles\mygame.dir\src\gamelogic.cpp.obj.d -o CMakeFiles\mygame.dir\src\gamelogic.cpp.obj -c C:\Users\elias\Downloads\GameChallenge\raylibCmakeSetup-master\src\gamelogic.cpp
 
 CMakeFiles/mygame.dir/src/gamelogic.cpp.i: cmake_force
@@ -87,7 +102,7 @@ CMakeFiles/mygame.dir/src/main.cpp.obj: CMakeFiles/mygame.dir/flags.make
 CMakeFiles/mygame.dir/src/main.cpp.obj: CMakeFiles/mygame.dir/includes_CXX.rsp
 CMakeFiles/mygame.dir/src/main.cpp.obj: C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/src/main.cpp
 CMakeFiles/mygame.dir/src/main.cpp.obj: CMakeFiles/mygame.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\elias\Downloads\GameChallenge\raylibCmakeSetup-master\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/mygame.dir/src/main.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\elias\Downloads\GameChallenge\raylibCmakeSetup-master\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/mygame.dir/src/main.cpp.obj"
 	C:\msys64\ucrt64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/mygame.dir/src/main.cpp.obj -MF CMakeFiles\mygame.dir\src\main.cpp.obj.d -o CMakeFiles\mygame.dir\src\main.cpp.obj -c C:\Users\elias\Downloads\GameChallenge\raylibCmakeSetup-master\src\main.cpp
 
 CMakeFiles/mygame.dir/src/main.cpp.i: cmake_force
@@ -100,12 +115,14 @@ CMakeFiles/mygame.dir/src/main.cpp.s: cmake_force
 
 # Object files for target mygame
 mygame_OBJECTS = \
+"CMakeFiles/mygame.dir/src/Map_generation.cpp.obj" \
 "CMakeFiles/mygame.dir/src/gamelogic.cpp.obj" \
 "CMakeFiles/mygame.dir/src/main.cpp.obj"
 
 # External object files for target mygame
 mygame_EXTERNAL_OBJECTS =
 
+mygame.exe: CMakeFiles/mygame.dir/src/Map_generation.cpp.obj
 mygame.exe: CMakeFiles/mygame.dir/src/gamelogic.cpp.obj
 mygame.exe: CMakeFiles/mygame.dir/src/main.cpp.obj
 mygame.exe: CMakeFiles/mygame.dir/build.make
@@ -118,7 +135,7 @@ mygame.exe: thirdparty/raylib-5.0/raylib/external/glfw/src/libglfw3.a
 mygame.exe: CMakeFiles/mygame.dir/linkLibs.rsp
 mygame.exe: CMakeFiles/mygame.dir/objects1.rsp
 mygame.exe: CMakeFiles/mygame.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\elias\Downloads\GameChallenge\raylibCmakeSetup-master\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable mygame.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Users\elias\Downloads\GameChallenge\raylibCmakeSetup-master\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable mygame.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\mygame.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

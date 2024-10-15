@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/mygame.dir/src/Map_generation.cpp.obj"
+  "CMakeFiles/mygame.dir/src/Map_generation.cpp.obj.d"
   "CMakeFiles/mygame.dir/src/gamelogic.cpp.obj"
   "CMakeFiles/mygame.dir/src/gamelogic.cpp.obj.d"
   "CMakeFiles/mygame.dir/src/main.cpp.obj"

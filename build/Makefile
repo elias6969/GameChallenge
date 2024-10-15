@@ -272,6 +272,30 @@ rlimgui/fast:
 	$(MAKE) $(MAKESILENT) -f thirdparty\rlImGui\CMakeFiles\rlimgui.dir\build.make thirdparty/rlImGui/CMakeFiles/rlimgui.dir/build
 .PHONY : rlimgui/fast
 
+src/Map_generation.obj: src/Map_generation.cpp.obj
+.PHONY : src/Map_generation.obj
+
+# target to build an object file
+src/Map_generation.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\mygame.dir\build.make CMakeFiles/mygame.dir/src/Map_generation.cpp.obj
+.PHONY : src/Map_generation.cpp.obj
+
+src/Map_generation.i: src/Map_generation.cpp.i
+.PHONY : src/Map_generation.i
+
+# target to preprocess a source file
+src/Map_generation.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\mygame.dir\build.make CMakeFiles/mygame.dir/src/Map_generation.cpp.i
+.PHONY : src/Map_generation.cpp.i
+
+src/Map_generation.s: src/Map_generation.cpp.s
+.PHONY : src/Map_generation.s
+
+# target to generate assembly for a file
+src/Map_generation.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\mygame.dir\build.make CMakeFiles/mygame.dir/src/Map_generation.cpp.s
+.PHONY : src/Map_generation.cpp.s
+
 src/gamelogic.obj: src/gamelogic.cpp.obj
 .PHONY : src/gamelogic.obj
 
@@ -341,6 +365,9 @@ help:
 	@echo ... mygame
 	@echo ... raylib
 	@echo ... rlimgui
+	@echo ... src/Map_generation.obj
+	@echo ... src/Map_generation.i
+	@echo ... src/Map_generation.s
 	@echo ... src/gamelogic.obj
 	@echo ... src/gamelogic.i
 	@echo ... src/gamelogic.s

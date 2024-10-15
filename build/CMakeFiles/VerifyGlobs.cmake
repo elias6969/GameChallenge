@@ -5,6 +5,7 @@ cmake_policy(SET CMP0009 NEW)
 # MY_SOURCES at CMakeLists.txt:43 (file)
 file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/src/*.cpp")
 set(OLD_GLOB
+  "C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/src/Map_generation.cpp"
   "C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/src/gamelogic.cpp"
   "C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/src/main.cpp"
   )

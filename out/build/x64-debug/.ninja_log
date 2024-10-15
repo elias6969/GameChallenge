@@ -1,0 +1,14 @@
+# ninja log v5
+7	38	0	C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/out/build/x64-debug/CMakeFiles/cmake.verify_globs	d369f85f4f6aebea
+92	325	7502577412046442	thirdparty/raylib-5.0/raylib/CMakeFiles/raylib.dir/rshapes.c.obj	402f9601e2d8c6e1
+125	391	7502577412385540	thirdparty/raylib-5.0/raylib/CMakeFiles/raylib.dir/utils.c.obj	81f063b5afa4f39a
+103	410	7502577412874234	thirdparty/raylib-5.0/raylib/CMakeFiles/raylib.dir/rtext.c.obj	fa2d21d63ffd912b
+81	503	7502577413352948	thirdparty/raylib-5.0/raylib/CMakeFiles/raylib.dir/rmodels.c.obj	4744ec49cbc6bd7e
+64	515	7502577413981273	thirdparty/raylib-5.0/raylib/CMakeFiles/raylib.dir/rcore.c.obj	4cbae060a80a7a47
+411	880	7502577416993215	thirdparty/raylib-5.0/raylib/external/glfw/src/CMakeFiles/glfw.dir/init.c.obj	f1323744574c18e6
+391	890	7502577417571674	thirdparty/raylib-5.0/raylib/external/glfw/src/CMakeFiles/glfw.dir/context.c.obj	9c9e9023d133c356
+516	905	7502577418000528	thirdparty/raylib-5.0/raylib/external/glfw/src/CMakeFiles/glfw.dir/monitor.c.obj	1ff59bd9f513c694
+114	916	7502577418160092	thirdparty/raylib-5.0/raylib/CMakeFiles/raylib.dir/rtextures.c.obj	577577f27b95ad
+52	927	7502577418279775	CMakeFiles/mygame.dir/src/main.cpp.obj	4fab06bcd256b746
+503	977	7502577418778441	thirdparty/raylib-5.0/raylib/external/glfw/src/CMakeFiles/glfw.dir/input.c.obj	4364721ac408bebd
+326	1298	7502577421964934	thirdparty/raylib-5.0/raylib/CMakeFiles/raylib.dir/raudio.c.obj	c11e42591ada5776

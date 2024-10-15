@@ -1,6 +1,12 @@
 [
 {
   "directory": "C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP -DPRODUCTION_BUILD=0 -DRESOURCES_PATH=\\\"C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/resources/\\\" @CMakeFiles/mygame.dir/includes_CXX.rsp -g -std=gnu++17 -flto=auto -fno-fat-lto-objects -o CMakeFiles\\mygame.dir\\src\\Map_generation.cpp.obj -c C:\\Users\\elias\\Downloads\\GameChallenge\\raylibCmakeSetup-master\\src\\Map_generation.cpp",
+  "file": "C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/src/Map_generation.cpp",
+  "output": "CMakeFiles/mygame.dir/src/Map_generation.cpp.obj"
+},
+{
+  "directory": "C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/build",
   "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DGRAPHICS_API_OPENGL_33 -DPLATFORM_DESKTOP -DPRODUCTION_BUILD=0 -DRESOURCES_PATH=\\\"C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/resources/\\\" @CMakeFiles/mygame.dir/includes_CXX.rsp -g -std=gnu++17 -flto=auto -fno-fat-lto-objects -o CMakeFiles\\mygame.dir\\src\\gamelogic.cpp.obj -c C:\\Users\\elias\\Downloads\\GameChallenge\\raylibCmakeSetup-master\\src\\gamelogic.cpp",
   "file": "C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/src/gamelogic.cpp",
   "output": "CMakeFiles/mygame.dir/src/gamelogic.cpp.obj"
