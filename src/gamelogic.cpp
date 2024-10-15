@@ -12,23 +12,12 @@ std::vector<InventorySlot> inventories;
 
 bool pickedup = false;
 
-Texture2D gold;
-
-void storeTexture(const char *filepath)
-{
-    gold = LoadTexture(filepath);
-}
-
-Texture2D getTexture()
-{
-    return gold;
-}
-
 bool isMouseOverRectangle(Rectangle rect)
 {
     Vector2 mousePosition = GetMousePosition();
     return CheckCollisionPointRec(mousePosition, rect);
 }
+
 void init(std::vector<InventorySlot> &inventories, int slotsX, int slotsY, float slotSize, float slotPadding, int screenHeight)
 {
 
@@ -52,9 +41,9 @@ void drawItem(const InventorySlot &slot)
     // Checks what type of object is picked up(This always updates So be carefull)
     if (slot.Itemtype == "Gold")
     {
-        gold.height = slot.rect.height - 2;
-        gold.width = slot.rect.width - 2;
-        DrawTexture(gold, slot.rect.x, slot.rect.y, WHITE);
+        //gold.height = slot.rect.height - 2;
+       //gold.width = slot.rect.width - 2;
+        //DrawTexture(gold, slot.rect.x, slot.rect.y, WHITE);
     }
     else if (slot.Itemtype == "Silver")
     {
@@ -69,10 +58,6 @@ void drawItem(const InventorySlot &slot)
     }
 }
 
-void Delete(Texture2D mineraltexture)
-{
-    UnloadTexture(mineraltexture);
-}
 
 void DrawInventory(const std::vector<InventorySlot> &inventories)
 {
@@ -149,20 +134,6 @@ void DrawEntity(const Entity &entity)
     DrawText(entity.type, entity.position.x - 15, entity.position.y - 15, 10, WHITE);
 }
 
-template <typename Entity>
-void VillagerInteraction(const Entity &entity)
-{
-    // Ensure the entity is of type Villager
-    if constexpr (std::is_same_v<Entity, Villager>)
-    {
-        DrawText("Hey, you're trading with me!", entity.position.x, entity.position.y, 20, BLACK);
-    }
-    else
-    {
-        std::cout << "Error: Entity is not a villager!" << std::endl;
-    }
-}
-
 // Overloaded function for Enemies to use 'Position' field
 void DrawEntity(const Enemies &enemy)
 {
@@ -171,6 +142,16 @@ void DrawEntity(const Enemies &enemy)
     pickedup = true;
 }
 
+/*
+ __      ___ _ _                       
+ \ \    / (_) | |                      
+  \ \  / / _| | | __ _  __ _  ___ _ __ 
+   \ \/ / | | | |/ _` |/ _` |/ _ \ '__|
+    \  /  | | | | (_| | (_| |  __/ |   
+     \/   |_|_|_|\__,_|\__, |\___|_|   
+                        __/ |          
+                       |___/           
+*/
 // Special draw function for Villagers to use 'name' instead of 'type'
 void DrawVillager(const Villager &villager)
 {
@@ -208,11 +189,36 @@ void DrawTradeInterface(const Villager &villager, bool &villagerinteraction)
     }
 }
 
+template <typename Entity>
+void VillagerInteraction(const Entity &entity)
+{
+    // Ensure the entity is of type Villager
+    if constexpr (std::is_same_v<Entity, Villager>)
+    {
+        DrawText("Hey, you're trading with me!", entity.position.x, entity.position.y, 20, BLACK);
+    }
+    else
+    {
+        std::cout << "Error: Entity is not a villager!" << std::endl;
+    }
+}
+
 // Handle villager interaction with speech bubble and typing effect
 void HandleVillagerInteraction(const Villager &villager, float interactionTime, bool &villagerinteraction)
 {
     DrawTradeInterface(villager, villagerinteraction);
 }
+
+/*
+  _____  _                             __      _                     __                  _   _             
+ |  __ \| |                           / /     | |                   / _|                | | (_)            
+ | |__) | | __ _ _   _  ___ _ __     / /    __| |_ __ __ ___      _| |_ _   _ _ __   ___| |_ _  ___  _ __  
+ |  ___/| |/ _` | | | |/ _ \ '__|   / /    / _` | '__/ _` \ \ /\ / /  _| | | | '_ \ / __| __| |/ _ \| '_ \ 
+ | |    | | (_| | |_| |  __/ |     / /    | (_| | | | (_| |\ V  V /| | | |_| | | | | (__| |_| | (_) | | | |
+ |_|    |_|\__,_|\__, |\___|_|    /_/      \__,_|_|  \__,_| \_/\_/ |_|  \__,_|_| |_|\___|\__|_|\___/|_| |_|
+                  __/ |                                                                                    
+                 |___/                                                                                     
+*/
 
 // Function for player movement and interaction handling
 void PlayerCreation(Player &player, std::vector<Enemies> &enemies, std::vector<Mineral> &minerals, std::vector<Tree> &trees, std::vector<Villager> &villagers, std::vector<InventorySlot> &inventory, bool &InteractedWithVillager)
@@ -386,10 +392,7 @@ void PlayerCreation(Player &player, std::vector<Enemies> &enemies, std::vector<M
 }
 
 // Function to draw all entities in their respective groups
-void DrawEntities(const std::vector<Mineral> &minerals,
-                  const std::vector<Tree> &trees,
-                  const std::vector<Enemies> &enemies,
-                  const std::vector<Villager> &villagers)
+void DrawEntities(const std::vector<Mineral> &minerals, const std::vector<Tree> &trees, const std::vector<Enemies> &enemies,const std::vector<Villager> &villagers)
 {
 
     // Draw minerals
@@ -418,7 +421,16 @@ void DrawEntities(const std::vector<Mineral> &minerals,
 }
 
 
-//AI System Functions
+/*
+           _                 _                 
+     /\   (_)               | |                
+    /  \   _   ___ _   _ ___| |_ ___ _ __ ___  
+   / /\ \ | | / __| | | / __| __/ _ \ '_ ` _ \ 
+  / ____ \| | \__ \ |_| \__ \ ||  __/ | | | | |
+ /_/    \_\_| |___/\__, |___/\__\___|_| |_| |_|
+                    __/ |                      
+                   |___/                       
+*/
 //            Initial position, speed, direction, direction change interval, and timer
 AIEntity ai = {{400.0f, 400.0f}, 50.0f, {0.0f, 0.0f}, 2.0f, 0.0f}; 
 
@@ -450,7 +462,17 @@ void DrawAI(const AIEntity &ai){
     DrawCircleV(ai.position, 10.0f, BLUE); // Draw AI as a blue circle
 }
 
-//Weapon system Functions
+
+/*
+ __          __                             _____           _                 
+ \ \        / /                            / ____|         | |                
+  \ \  /\  / /__  __ _ _ __   ___  _ __   | (___  _   _ ___| |_ ___ _ __ ___  
+   \ \/  \/ / _ \/ _` | '_ \ / _ \| '_ \   \___ \| | | / __| __/ _ \ '_ ` _ \ 
+    \  /\  /  __/ (_| | |_) | (_) | | | |  ____) | |_| \__ \ ||  __/ | | | | |
+     \/  \/ \___|\__,_| .__/ \___/|_| |_| |_____/ \__, |___/\__\___|_| |_| |_|
+                      | |                          __/ |                      
+                      |_|                         |___/                       
+*/
 
 float Vector2Distance(Vector2 v1, Vector2 v2) {
     return sqrt((v2.x - v1.x) * (v2.x - v1.x) + (v2.y - v1.y) * (v2.y - v1.y));
@@ -470,13 +492,13 @@ Vector2 Vector2Normalize(Vector2 v)
 }
 
 
-void WeaponSystem(Player &player)
+void WeaponSystem(Player &player, const std::vector<CollideExample> &Wall)
 {
     Vector2 mousePosition = GetMousePosition();
     static Vector2 EndPosition = {0.0f, 0.0f};
     static Vector2 currentposition = {0.0f, 0.0f};
-    float speed = 100.0f;
-
+    float speed = 500.0f;
+    
     DrawLineV(player.PlayerPosition, mousePosition, WHITE);
 
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
@@ -485,13 +507,71 @@ void WeaponSystem(Player &player)
         currentposition = player.PlayerPosition;
         EndPosition = mousePosition;
     }
+
     Vector2 direction = Vector2Normalize({EndPosition.x - currentposition.x, EndPosition.y - currentposition.y});
+    Vector2 velocity = {direction.x * speed, direction.y * speed};
+
     // Move towards the end position if not already there
     if (Vector2Distance(currentposition, EndPosition) > 1.0f)
     {
-        currentposition.x += direction.x * speed * GetFrameTime(); // FrameTime to keep it consistent across frames
-        currentposition.y += direction.y * speed * GetFrameTime();
+        currentposition.x += velocity.x * GetFrameTime();
+        currentposition.y += velocity.y * GetFrameTime();
     }
+
+for (const CollideExample &wall : Wall)
+{
+    Rectangle wallrect = {wall.Position.x, wall.Position.y, wall.Width, wall.Height};
+
+    if (CheckCollisionCircleRec(currentposition, 5.0f, wallrect))
+    {
+        // Determine wall normal based on collision side
+        Vector2 wallNormal = {0, 0};
+        float distanceToLeft = currentposition.x - wallrect.x; // Left side
+        float distanceToRight = (wallrect.x + wallrect.width) - currentposition.x; // Right side
+        float distanceToTop = currentposition.y - wallrect.y; // Top side
+        float distanceToBottom = (wallrect.y + wallrect.height) - currentposition.y; // Bottom side
+
+        // Find the minimum distance to determine the wall side collided with
+        float minDistance = fmin(fmin(distanceToLeft, distanceToRight),
+                                 fmin(distanceToTop, distanceToBottom));
+
+        // Assign wall normal based on which side was hit
+        if (minDistance == distanceToLeft) {
+            wallNormal = {-1, 0}; // Collided with the left side
+        } 
+        else if (minDistance == distanceToRight) {
+            wallNormal = {1, 0}; // Collided with the right side
+        } 
+        else if (minDistance == distanceToTop) {
+            wallNormal = {0, -1}; // Collided with the top side
+        } 
+        else if (minDistance == distanceToBottom) {
+            wallNormal = {0, 1}; // Collided with the bottom side
+        }
+
+        // Calculate the dot product
+        float dotProduct = (velocity.x * wallNormal.x) + (velocity.y * wallNormal.y);
+
+        // Reflect the velocity vector
+        velocity.x = velocity.x - 2 * dotProduct * wallNormal.x;
+        velocity.y = velocity.y - 2 * dotProduct * wallNormal.y;
+
+        // Adjust position to move the projectile out of the wall slightly
+        currentposition.x += wallNormal.x * 5.0f; // Move out based on the normal direction
+        currentposition.y += wallNormal.y * 5.0f; // Move out based on the normal direction
+
+        // Optionally reset EndPosition or set it according to your logic
+        EndPosition = {0.0f, 0.0f}; // Or handle according to your game logic
+    }
+}
     DrawCircleV(EndPosition, 3.0f, RED);
     DrawCircleV(currentposition, 10.0f, BLACK);
+}
+
+void Delete(const std::vector<Texture2D> &mineraltexture)
+{
+    for (const auto &texture : mineraltexture)
+    {
+        UnloadTexture(texture);
+    }
 }
