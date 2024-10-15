@@ -12,9 +12,21 @@ std::vector<InventorySlot> inventories;
 
 bool pickedup = false;
 
+Texture2D gold;
+
+void storeTexture(const char *filepath)
+{
+    gold = LoadTexture(filepath);
+}
+
+Texture2D getTexture()
+{
+    return gold;
+}
+
 void init(std::vector<InventorySlot> &inventories, int slotsX, int slotsY, float slotSize, float slotPadding, int screenHeight)
 {
-    
+
     // Set up inventory grid at the bottom of the screen
     for (int x = 0; x < slotsX; x++)
     {
@@ -30,41 +42,44 @@ void init(std::vector<InventorySlot> &inventories, int slotsX, int slotsY, float
     }
 }
 
-void drawItem(const InventorySlot &slot, Texture2D mineraltexture)
+void drawItem(const InventorySlot &slot)
 {
     if (slot.Itemtype == "Gold")
     {
-        DrawCircle(slot.rect.x + slot.rect.width / 2, slot.rect.y + slot.rect.height / 2, 10, YELLOW);
-        DrawTexture(mineraltexture, slot.rect.x + slot.rect.width / 2, slot.rect.y, DARKGRAY);
+        gold.height = slot.rect.height - 2;
+        gold.width = slot.rect.width - 2;
+        DrawTexture(gold, slot.rect.x, slot.rect.y, WHITE);
     }
     else if (slot.Itemtype == "Silver")
     {
         DrawCircle(slot.rect.x + slot.rect.width / 2, slot.rect.y + slot.rect.height / 2, 10, LIGHTGRAY);
     }
-    else if(slot.Itemtype == "Oak")
+    else if (slot.Itemtype == "Oak")
     {
         std::cout << "load texture bro" << std::endl;
-    }else{
+    }
+    else
+    {
         std::cout << "couldnt find mineral type, fix the code dumbass " << std::endl;
     }
 }
 
-void Delete(Texture2D mineraltexture){
+void Delete(Texture2D mineraltexture)
+{
     UnloadTexture(mineraltexture);
 }
 void DrawInventory(const std::vector<InventorySlot> &inventories)
 {
     for (const auto &slot : inventories)
     {
-        // Draw the slot (use DrawRectangle for example)
+        // Draw the inventory slot
         DrawRectangleRec(slot.rect, slot.color);
 
-        // If the slot has an item, you can draw an item (represent this however you want)
-        std::unordered_map<std::string, void (*)(const InventorySlot &, Texture2D mineraltexture)> itemAction = {
+        //Checks what the name of the object picked up
+        std::unordered_map<std::string, void (*)(const InventorySlot &)> itemAction = {
             {"Gold", drawItem},
             {"Silver", drawItem},
-            {"Oak", drawItem}
-            };
+            {"Oak", drawItem}};
 
         if (slot.hasItem)
         {
@@ -72,7 +87,7 @@ void DrawInventory(const std::vector<InventorySlot> &inventories)
 
             if (itemAction.find(itemTypestr) != itemAction.end())
             {
-                itemAction[itemTypestr](slot, );
+                itemAction[itemTypestr](slot);
             }
             else
             {
@@ -111,17 +126,27 @@ void HandleInteraction(const Player &player, const Enemies &enemy, const Vector2
 }
 
 // Templated function to draw any entity
+// Templated function to draw any entity
 template <typename Entity>
 void DrawEntity(const Entity &entity)
 {
-    DrawCircleV(entity.position, 10.0f, entity.color); // For entities that have 'position'
+    // Check if the entity has a texture and draw it
+    if constexpr (std::is_same_v<Entity, Enemies>) // Check if Entity is of type Enemies
+    {
+        DrawTextureV(entity.texture, entity.Position, entity.color);
+    }
+    else
+    {
+        DrawCircleV(entity.position, 10.0f, entity.color); // For entities that have 'position'
+    }
+    
     DrawText(entity.type, entity.position.x - 15, entity.position.y - 15, 10, WHITE);
 }
 
 // Overloaded function for Enemies to use 'Position' field
 void DrawEntity(const Enemies &enemy)
 {
-    DrawCircleV(enemy.Position, 10.0f, enemy.color); // For 'Enemies', use 'Position'
+    DrawTextureV(enemy.texture, enemy.Position, enemy.color);
     DrawText(enemy.type, enemy.Position.x - 15, enemy.Position.y - 15, 10, WHITE);
     pickedup = true;
 }
@@ -132,6 +157,7 @@ void DrawVillager(const Villager &villager)
     DrawCircleV(villager.position, 10.0f, villager.color);
     DrawText(villager.name, villager.position.x - 15, villager.position.y - 15, 10, WHITE);
 }
+
 
 // Function for player movement and interaction handling
 void PlayerCreation(Player &player, std::vector<Enemies> &enemies, std::vector<Mineral> &minerals, std::vector<Tree> &trees, std::vector<Villager> &villagers, std::vector<InventorySlot> &inventory)
@@ -248,10 +274,12 @@ void PlayerCreation(Player &player, std::vector<Enemies> &enemies, std::vector<M
                 }
             }
 
-            if(!slotFound){
+            if (!slotFound)
+            {
                 std::cout << "Inventory is full!" << std::endl;
             }
-            else{
+            else
+            {
                 trees.erase(trees.begin() + i);
                 i--;
             }

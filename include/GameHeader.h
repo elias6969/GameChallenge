@@ -19,6 +19,7 @@ struct Enemies {
     Vector2 Position;  // Position of the enemy
     Color color;       // Color to represent the enemy
     const char* type; // Type of tree (e.g., "Oak", "Pine")
+    Texture2D texture;
 };
 
 // Mineral structure
@@ -26,6 +27,7 @@ struct Mineral {
     Vector2 position;   // Position of the mineral
     Color color;        // Color to represent the type of mineral
     const char* type;   // Type of mineral (e.g., "Gold", "Silver")
+    Texture2D mineralTexture;
 };
 
 // Tree structure
@@ -33,6 +35,7 @@ struct Tree {
     Vector2 position;   // Position of the tree
     Color color;        // Color to represent the type of tree
     const char* type;   // Type of tree (e.g., "Oak", "Pine")
+    Texture2D treetexture;
 };
 
 
@@ -42,6 +45,7 @@ struct Villager {
     Color color;        // Color to represent the villager
     const char* name;   // Name of the villager
     bool canTrade;      // Indicates if the villager can trade
+    Texture2D VillagerTexture;
 };
 
 struct InventorySlot {
@@ -50,7 +54,7 @@ struct InventorySlot {
     Rectangle rect; // Visual rectangle for the slot
     Color color;    // Color to represent item or empty
 };
-extern std::string storedPathTexture;
+
 
 void init(std::vector<InventorySlot> &inventories, int slotsX, int slotsY, float slotSize, float slotPadding, int screenHeight);
 
@@ -64,7 +68,11 @@ void DrawEntities(const std::vector<Mineral>& minerals,
                   const std::vector<Enemies>& enemies, 
                   const std::vector<Villager>& villagers);
 
-std::string getString();
+extern Texture2D Storemineraltexture;
+
+void storeTexture(const char* filepath);
+
+Texture2D getTexture();
 
 void Delete(Texture2D mineraltexture);
 

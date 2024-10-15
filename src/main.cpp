@@ -141,7 +141,11 @@ int main(void)
 	}
 
 #pragma endregion
+
 	Texture2D PlayerSprite = LoadTexture("C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/resources/rabbit.png");
+	Texture2D gold = LoadTexture("C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/resources/Assets/Crafting&Gathering/Gold.png");
+	Texture2D Silver = LoadTexture("C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/resources/Assets/Crafting&Gathering/Silver.png");
+
 	if (PlayerSprite.id == 0)
 	{
 		std::cerr << "Error: Could not load texture." << std::endl;
@@ -151,6 +155,7 @@ int main(void)
 	{
 		std::cerr << "Successfully loaded texture" << std::endl;
 	}
+	
 
 	// Create player instance and set initial values
 	Player player = {
@@ -190,8 +195,8 @@ int main(void)
 
 	// If you want to use vectors for multiple instances:
 	std::vector<Mineral> minerals = {
-		{{100.0f, 150.0f}, YELLOW, "Gold"},
-		{{200.0f, 250.0f}, DARKGRAY, "Silver"}};
+		{{100.0f, 150.0f}, YELLOW, "Gold", gold},
+		{{200.0f, 250.0f}, DARKGRAY, "Silver", Silver}};
 
 	std::vector<Tree> trees = {
 		{{300.0f, 350.0f}, BROWN, "Oak"},
@@ -220,12 +225,13 @@ int main(void)
 	bool showinventory = false;
     
 	//Texture loading
-	Texture2D gold = LoadTexture("C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/resources/Assets/Crafting&Gathering/Gold.png");
+	storeTexture("C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/resources/Assets/Crafting&Gathering/Gold.png");
 	// MAIN LOOP
 	while (!WindowShouldClose())
 	{
 		BeginDrawing();
 		ClearBackground(BLACK);
+
 		DrawFPS(10, 10);
 		if (IsKeyPressed(KEY_E))
 		{
@@ -241,6 +247,8 @@ int main(void)
 		}
 		PlayerCreation(player, enemies, minerals, trees, villagers, inventories);
 		DrawEntities(minerals, trees, enemies, villagers);
+
+		//Imgui Stuff
 #pragma region imgui
 		rlImGuiBegin();
 
@@ -268,12 +276,13 @@ int main(void)
 
 		EndDrawing();
 	}
+	//Deletion
     Delete(gold);
+
 #pragma region imgui
 	rlImGuiShutdown();
 #pragma endregion
 
 	CloseWindow();
-
 	return 0;
 }

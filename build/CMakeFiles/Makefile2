@@ -181,8 +181,8 @@ thirdparty/rlImGui/clean: thirdparty/rlImGui/CMakeFiles/rlimgui.dir/clean
 # All Build rule for target.
 CMakeFiles/mygame.dir/all: thirdparty/raylib-5.0/raylib/CMakeFiles/raylib.dir/all
 CMakeFiles/mygame.dir/all: thirdparty/raylib-5.0/raylib/external/glfw/src/CMakeFiles/glfw.dir/all
-CMakeFiles/mygame.dir/all: thirdparty/imgui-docking/CMakeFiles/imgui.dir/all
 CMakeFiles/mygame.dir/all: thirdparty/rlImGui/CMakeFiles/rlimgui.dir/all
+CMakeFiles/mygame.dir/all: thirdparty/imgui-docking/CMakeFiles/imgui.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\mygame.dir\build.make CMakeFiles/mygame.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\mygame.dir\build.make CMakeFiles/mygame.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=C:\Users\elias\Downloads\GameChallenge\raylibCmakeSetup-master\build\CMakeFiles --progress-num=31,32,33 "Built target mygame"
