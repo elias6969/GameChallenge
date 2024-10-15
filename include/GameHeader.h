@@ -68,6 +68,13 @@ struct AIEntity {
     float timeSinceLastChange;
 };
 
+struct CollideExample{
+    Vector2 Position;
+    int Width;
+    int Height;
+    Color color;
+};
+
 extern AIEntity ai;
 
 void UpdateAI(AIEntity &ai);
@@ -89,13 +96,10 @@ extern Texture2D Storemineraltexture;
 
 void storeTexture(const char* filepath);
 
-Texture2D getTexture();
-
-void WeaponSystem(Player &player);
+void WeaponSystem(Player &player, const std::vector<CollideExample> &Wall);
 
 void DrawAI(const AIEntity &ai);
 
-
-void Delete(Texture2D mineraltexture);
+void Delete(const std::vector<Texture2D> &mineraltexture);
 
 #endif

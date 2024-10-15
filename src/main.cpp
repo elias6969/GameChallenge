@@ -16,11 +16,14 @@
 #include <GameHeader.h>
 #include "MapGeneration.h"
 
-void interact(bool &var){
+void interact(bool &var)
+{
 	int x = 1;
 
-	if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
-		if(x == 1){
+	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+	{
+		if (x == 1)
+		{
 			var = true;
 		}
 	}
@@ -54,7 +57,7 @@ int main(void)
 	Texture2D PlayerSprite = LoadTexture("C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/resources/rabbit.png");
 	Texture2D gold = LoadTexture("C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/resources/Assets/Crafting&Gathering/Gold.png");
 	Texture2D Silver = LoadTexture("C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/resources/Assets/Crafting&Gathering/Silver.png");
-
+	std::vector<Texture2D> unloadingtextures = {gold, Silver};
 	if (PlayerSprite.id == 0)
 	{
 		std::cerr << "Error: Could not load texture." << std::endl;
@@ -157,6 +160,10 @@ int main(void)
 	bool InteractedVillager = false;
 	std::cout << "hello beginning" << std::endl;
 	bool examplebool = false;
+	Rectangle wall = {350, 500, 200, 200};
+	// Initialize CollideExample with the wall rectangle
+	CollideExample wallExample = {{wall.x, wall.y}, (int)wall.width, (int)wall.height, RED};
+	std::vector<CollideExample> wallrect = {wallExample};
 	// MAIN LOOP
 	while (!WindowShouldClose())
 	{
@@ -164,11 +171,12 @@ int main(void)
 		ClearBackground(BLACK);
 		Generate(mapgenerationInformation, map, tilesize, scalefactor, tileSheet);
 		DrawFPS(10, 10);
-        UpdateAI(ai);
+		UpdateAI(ai);
 		DrawAI(ai);
 		PlayerCreation(player, enemies, minerals, trees, villagers, inventories, InteractedVillager);
 		DrawEntities(minerals, trees, enemies, villagers);
-		WeaponSystem(player);
+		DrawRectangleRec(wall, RED);
+		WeaponSystem(player, wallrect);
 		interact(examplebool);
 
 		// Imgui Stuff
@@ -198,7 +206,7 @@ int main(void)
 	}
 	deleteTexture(tileSheet);
 	// Deletion
-	Delete(gold);
+	Delete(unloadingtextures);
 
 #pragma region imgui
 	rlImGuiShutdown();
