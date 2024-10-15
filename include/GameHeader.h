@@ -38,6 +38,10 @@ struct Tree {
     Texture2D treetexture;
 };
 
+struct TradeItem {
+    std::string name;
+    int value; // Could represent how much the item is worth
+};
 
 // Villager structure
 struct Villager {
@@ -46,6 +50,7 @@ struct Villager {
     const char* name;   // Name of the villager
     bool canTrade;      // Indicates if the villager can trade
     Texture2D VillagerTexture;
+    std::vector<TradeItem> tradeItems;
 };
 
 struct InventorySlot {
@@ -55,13 +60,25 @@ struct InventorySlot {
     Color color;    // Color to represent item or empty
 };
 
+struct AIEntity {
+    Vector2 position;
+    float speed;
+    Vector2 direction;
+    float directionChangeInterval;
+    float timeSinceLastChange;
+};
+
+extern AIEntity ai;
+
+void UpdateAI(AIEntity &ai);
+void DrawAI(const AIEntity &ai);
 
 void init(std::vector<InventorySlot> &inventories, int slotsX, int slotsY, float slotSize, float slotPadding, int screenHeight);
 
 void DrawInventory(const std::vector<InventorySlot>& inventories);
 
 // Function declaration for PlayerCreation
-void PlayerCreation(Player &player, std::vector<Enemies> &enemies, std::vector<Mineral> &minerals, std::vector<Tree> &trees, std::vector<Villager> &villagers, std::vector<InventorySlot> &inventory);
+void PlayerCreation(Player &player, std::vector<Enemies> &enemies, std::vector<Mineral> &minerals, std::vector<Tree> &trees, std::vector<Villager> &villagers, std::vector<InventorySlot> &inventory, bool &InteractedWithVillager);
 
 void DrawEntities(const std::vector<Mineral>& minerals, 
                   const std::vector<Tree>& trees, 
@@ -73,6 +90,11 @@ extern Texture2D Storemineraltexture;
 void storeTexture(const char* filepath);
 
 Texture2D getTexture();
+
+void WeaponSystem(Player &player);
+
+void DrawAI(const AIEntity &ai);
+
 
 void Delete(Texture2D mineraltexture);
 

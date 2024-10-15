@@ -24,6 +24,11 @@ Texture2D getTexture()
     return gold;
 }
 
+bool isMouseOverRectangle(Rectangle rect)
+{
+    Vector2 mousePosition = GetMousePosition();
+    return CheckCollisionPointRec(mousePosition, rect);
+}
 void init(std::vector<InventorySlot> &inventories, int slotsX, int slotsY, float slotSize, float slotPadding, int screenHeight)
 {
 
@@ -44,6 +49,7 @@ void init(std::vector<InventorySlot> &inventories, int slotsX, int slotsY, float
 
 void drawItem(const InventorySlot &slot)
 {
+    // Checks what type of object is picked up(This always updates So be carefull)
     if (slot.Itemtype == "Gold")
     {
         gold.height = slot.rect.height - 2;
@@ -56,7 +62,6 @@ void drawItem(const InventorySlot &slot)
     }
     else if (slot.Itemtype == "Oak")
     {
-        std::cout << "load texture bro" << std::endl;
     }
     else
     {
@@ -68,6 +73,7 @@ void Delete(Texture2D mineraltexture)
 {
     UnloadTexture(mineraltexture);
 }
+
 void DrawInventory(const std::vector<InventorySlot> &inventories)
 {
     for (const auto &slot : inventories)
@@ -75,7 +81,7 @@ void DrawInventory(const std::vector<InventorySlot> &inventories)
         // Draw the inventory slot
         DrawRectangleRec(slot.rect, slot.color);
 
-        //Checks what the name of the object picked up
+        // Checks what the name of the object picked up
         std::unordered_map<std::string, void (*)(const InventorySlot &)> itemAction = {
             {"Gold", drawItem},
             {"Silver", drawItem},
@@ -111,6 +117,7 @@ void HandleInteraction(const Player &player, const Entity &entity, const Vector2
     if (distance <= interactionRadius && IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
     {
         std::cout << action << " " << entity.type << std::endl;
+
         pickedup = true;
     }
 }
@@ -126,7 +133,6 @@ void HandleInteraction(const Player &player, const Enemies &enemy, const Vector2
 }
 
 // Templated function to draw any entity
-// Templated function to draw any entity
 template <typename Entity>
 void DrawEntity(const Entity &entity)
 {
@@ -139,8 +145,22 @@ void DrawEntity(const Entity &entity)
     {
         DrawCircleV(entity.position, 10.0f, entity.color); // For entities that have 'position'
     }
-    
+
     DrawText(entity.type, entity.position.x - 15, entity.position.y - 15, 10, WHITE);
+}
+
+template <typename Entity>
+void VillagerInteraction(const Entity &entity)
+{
+    // Ensure the entity is of type Villager
+    if constexpr (std::is_same_v<Entity, Villager>)
+    {
+        DrawText("Hey, you're trading with me!", entity.position.x, entity.position.y, 20, BLACK);
+    }
+    else
+    {
+        std::cout << "Error: Entity is not a villager!" << std::endl;
+    }
 }
 
 // Overloaded function for Enemies to use 'Position' field
@@ -158,10 +178,46 @@ void DrawVillager(const Villager &villager)
     DrawText(villager.name, villager.position.x - 15, villager.position.y - 15, 10, WHITE);
 }
 
+// Function to draw a trade interface
+void DrawTradeInterface(const Villager &villager, bool &villagerinteraction)
+{
+    // Draw a background rectangle for the trade window
+    DrawRectangle(200, 200, 400, 300, Fade(GRAY, 0.8f)); // Semi-transparent background
+
+    // Draw the villager's name
+    DrawText(villager.name, 250, 220, 20, WHITE);
+
+    // Draw the trade items
+    int yOffset = 250; // Starting position for the first item
+    for (const TradeItem &item : villager.tradeItems)
+    {
+        DrawText(item.name.c_str(), 250, yOffset, 20, WHITE);
+        DrawText(("Value: " + std::to_string(item.value)).c_str(), 400, yOffset, 20, WHITE);
+        yOffset += 30; // Space between items
+    }
+
+    // Draw close button (e.g., a simple rectangle for now)
+    Rectangle rect = {550, 200, 40, 40};
+    DrawRectangle(550, 200, 40, 40, RED); // Close button (X)
+    DrawText("X", 560, 210, 20, WHITE);   // X to close
+    bool isHovering = isMouseOverRectangle(rect);
+
+    if (isHovering && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
+    {
+        villagerinteraction = false;
+    }
+}
+
+// Handle villager interaction with speech bubble and typing effect
+void HandleVillagerInteraction(const Villager &villager, float interactionTime, bool &villagerinteraction)
+{
+    DrawTradeInterface(villager, villagerinteraction);
+}
 
 // Function for player movement and interaction handling
-void PlayerCreation(Player &player, std::vector<Enemies> &enemies, std::vector<Mineral> &minerals, std::vector<Tree> &trees, std::vector<Villager> &villagers, std::vector<InventorySlot> &inventory)
+void PlayerCreation(Player &player, std::vector<Enemies> &enemies, std::vector<Mineral> &minerals, std::vector<Tree> &trees, std::vector<Villager> &villagers, std::vector<InventorySlot> &inventory, bool &InteractedWithVillager)
 {
+
     float deltaTime = GetFrameTime(); // Time step for consistent movement
 
     // Define interaction points around the player
@@ -291,6 +347,7 @@ void PlayerCreation(Player &player, std::vector<Enemies> &enemies, std::vector<M
         HandleInteraction(player, tree, RightPoint, "Chopping down", 20.0f);
         DrawEntity(tree);
     }
+    float interactiontime = GetFrameTime();
 
     // Handle interaction and drawing for villagers
     for (const Villager &villager : villagers)
@@ -305,15 +362,25 @@ void PlayerCreation(Player &player, std::vector<Enemies> &enemies, std::vector<M
             if (villager.canTrade)
             {
                 std::cout << "Trading with " << villager.name << std::endl;
+                if (villager.name == "Trader Joe")
+                {
+                    InteractedWithVillager = true;
+                }
             }
             else
             {
+                // InteractedWithVillager = false;
+                std::cout << InteractedWithVillager << std::endl;
                 std::cout << "Talking to " << villager.name << std::endl;
             }
         }
+        if (InteractedWithVillager)
+        {
+            HandleVillagerInteraction(villager, 20.0f, InteractedWithVillager);
+        }
+        // std::cout << "Is it still true: " << InteractedWithVillager << std::endl;
         DrawVillager(villager);
     }
-
     // Draw the inventory
     DrawInventory(inventory);
 }
@@ -348,4 +415,83 @@ void DrawEntities(const std::vector<Mineral> &minerals,
     {
         DrawVillager(villager);
     }
+}
+
+
+//AI System Functions
+//            Initial position, speed, direction, direction change interval, and timer
+AIEntity ai = {{400.0f, 400.0f}, 50.0f, {0.0f, 0.0f}, 2.0f, 0.0f}; 
+
+void UpdateAI(AIEntity &ai)
+{
+    // Update the timer
+    ai.timeSinceLastChange += GetFrameTime();
+
+    // Change direction at regular intervals
+    if (ai.timeSinceLastChange >= ai.directionChangeInterval)
+    {
+        float randomAngle = GetRandomValue(0, 360) * DEG2RAD;
+        ai.direction = {cosf(randomAngle), sinf(randomAngle)};
+        ai.timeSinceLastChange = 0.0f;
+    }
+
+    // Update position
+    ai.position.x += ai.direction.x * ai.speed * GetFrameTime();
+    ai.position.y += ai.direction.y * ai.speed * GetFrameTime();
+
+    // Keep AI within screen bounds
+    if (ai.position.x < 0) ai.position.x = 0;
+    if (ai.position.x > GetScreenWidth()) ai.position.x = GetScreenWidth();
+    if (ai.position.y < 0) ai.position.y = 0;
+    if (ai.position.y > GetScreenHeight()) ai.position.y = GetScreenHeight();
+}
+
+void DrawAI(const AIEntity &ai){
+    DrawCircleV(ai.position, 10.0f, BLUE); // Draw AI as a blue circle
+}
+
+//Weapon system Functions
+
+float Vector2Distance(Vector2 v1, Vector2 v2) {
+    return sqrt((v2.x - v1.x) * (v2.x - v1.x) + (v2.y - v1.y) * (v2.y - v1.y));
+}
+
+Vector2 Vector2Normalize(Vector2 v)
+{
+    float length = sqrt(v.x * v.x + v.y * v.y);
+    if (length != 0)
+    {
+        return {v.x / length, v.y / length};
+    }
+    else
+    {
+        return {0, 0};
+    }
+}
+
+
+void WeaponSystem(Player &player)
+{
+    Vector2 mousePosition = GetMousePosition();
+    static Vector2 EndPosition = {0.0f, 0.0f};
+    static Vector2 currentposition = {0.0f, 0.0f};
+    float speed = 100.0f;
+
+    DrawLineV(player.PlayerPosition, mousePosition, WHITE);
+
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+    {
+        DrawCircleV(mousePosition, 5.0f, RED);
+        currentposition = player.PlayerPosition;
+        EndPosition = mousePosition;
+    }
+    Vector2 direction = Vector2Normalize({EndPosition.x - currentposition.x, EndPosition.y - currentposition.y});
+    // Move towards the end position if not already there
+    if (Vector2Distance(currentposition, EndPosition) > 1.0f)
+    {
+        currentposition.x += direction.x * speed * GetFrameTime(); // FrameTime to keep it consistent across frames
+        currentposition.y += direction.y * speed * GetFrameTime();
+    }
+    DrawCircleV(EndPosition, 3.0f, RED);
+    DrawCircleV(currentposition, 10.0f, BLACK);
 }

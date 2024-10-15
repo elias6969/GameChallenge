@@ -1,4 +1,8 @@
 TO DO IN THE FUTURE
 Load in the rest of the textures for the game
 Implement crafting, tools using material
-fancy up the inventory
+
+- Implement a Bow and arrow
+NEEDS FOR BOW
+arrow should be able to work with physics
+so bounce when it collides with objects or hits people

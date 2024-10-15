@@ -14,113 +14,22 @@
 
 // My own library
 #include <GameHeader.h>
+#include "MapGeneration.h"
 
-const int map[] = {
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	1,
-	1,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	1,
-	1,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	1,
-	1,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	1,
-	1,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	0,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-	1,
-};
+void interact(bool &var){
+	int x = 1;
+
+	if(IsMouseButtonPressed(MOUSE_LEFT_BUTTON)){
+		if(x == 1){
+			var = true;
+		}
+	}
+}
 
 int main(void)
 {
-
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-	InitWindow(800, 450, "Game");
+	InitWindow(800, 900, "Survivor gameEngine");
 
 #pragma region imgui
 	rlImGuiSetup(true);
@@ -155,7 +64,6 @@ int main(void)
 	{
 		std::cerr << "Successfully loaded texture" << std::endl;
 	}
-	
 
 	// Create player instance and set initial values
 	Player player = {
@@ -187,7 +95,7 @@ int main(void)
 
 	// Create a villager instance
 	Villager villager = {
-		{500.0f, 400.0f}, // Initial position
+		{100.0f, 100.0f}, // Initial position
 		BLUE,			  // Color
 		"Trader Joe",	  // Name
 		true			  // Can trade
@@ -208,7 +116,7 @@ int main(void)
 
 	std::vector<Villager> villagers = {
 		// POSITION       COLOR    NAME       TRADEABLE
-		{{700.0f, 750.0f}, BLUE, "Trader Joe", true},
+		{{300.0f, 350.0f}, BLUE, "Trader Joe", true},
 		{{800.0f, 850.0f}, GREEN, "Merchant Mike", false}};
 
 	// Variables for the inventory grid
@@ -223,32 +131,47 @@ int main(void)
 	// Initialize the inventory
 	init(inventories, slotsX, slotsY, slotSize, slotPadding, GetScreenHeight());
 	bool showinventory = false;
-    
-	//Texture loading
-	storeTexture("C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/resources/Assets/Crafting&Gathering/Gold.png");
+
+	// Texture loading
+	// storeTexture("C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/resources/Assets/Crafting&Gathering/Gold.png");
+	const char *tileset = "C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/resources/Assets/Tileset.png";
+	Texture2D tileSheet = LoadTexture("C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/resources/newmaptile.png");
+	Map *mapgenerationInformation;
+	Vector2 startposition;
+	// init(mapgenerationInformation, tileset);
+	int map[10][10] = {
+		{18, 18, 18, 18, 18, 18, 18, 18, 18, 19}, // Incremented top row
+		{32, 33, 34, 34, 34, 34, 34, 34, 34, 35}, // Incremented second row
+		{33, 34, 34, 34, 34, 34, 34, 34, 34, 35}, // Continue with incremented middle pieces
+		{33, 34, 34, 34, 34, 34, 34, 34, 34, 35},
+		{33, 34, 34, 34, 34, 34, 34, 34, 34, 35},
+		{33, 34, 34, 34, 34, 34, 34, 34, 34, 35},
+		{33, 34, 34, 34, 34, 34, 34, 34, 34, 35},
+		{33, 34, 34, 34, 34, 34, 34, 34, 34, 35},
+		{33, 34, 34, 34, 34, 34, 34, 34, 34, 35},
+		{49, 50, 50, 50, 50, 50, 50, 50, 50, 51} // Incremented bottom row
+	};
+
+	int tilesize = 48;
+	float scalefactor = 3.0f;
+	bool InteractedVillager = false;
+	std::cout << "hello beginning" << std::endl;
+	bool examplebool = false;
 	// MAIN LOOP
 	while (!WindowShouldClose())
 	{
 		BeginDrawing();
 		ClearBackground(BLACK);
-
+		Generate(mapgenerationInformation, map, tilesize, scalefactor, tileSheet);
 		DrawFPS(10, 10);
-		if (IsKeyPressed(KEY_E))
-		{
-			showinventory = true;
-		}
-		else if (IsKeyPressed(KEY_Q))
-		{
-			showinventory = false;
-		}
-		if (showinventory)
-		{
-			//DrawInventory(inventories);
-		}
-		PlayerCreation(player, enemies, minerals, trees, villagers, inventories);
+        UpdateAI(ai);
+		DrawAI(ai);
+		PlayerCreation(player, enemies, minerals, trees, villagers, inventories, InteractedVillager);
 		DrawEntities(minerals, trees, enemies, villagers);
+		WeaponSystem(player);
+		interact(examplebool);
 
-		//Imgui Stuff
+		// Imgui Stuff
 #pragma region imgui
 		rlImGuiBegin();
 
@@ -261,9 +184,6 @@ int main(void)
 		ImGui::Begin("Debugger");
 
 		ImGui::End();
-
-		DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
-
 #pragma region imgui
 		rlImGuiEnd();
 
@@ -276,8 +196,9 @@ int main(void)
 
 		EndDrawing();
 	}
-	//Deletion
-    Delete(gold);
+	deleteTexture(tileSheet);
+	// Deletion
+	Delete(gold);
 
 #pragma region imgui
 	rlImGuiShutdown();
