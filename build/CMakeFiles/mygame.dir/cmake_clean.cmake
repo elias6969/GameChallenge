@@ -5,6 +5,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/mygame.dir/src/gamelogic.cpp.obj.d"
   "CMakeFiles/mygame.dir/src/main.cpp.obj"
   "CMakeFiles/mygame.dir/src/main.cpp.obj.d"
+  "CMakeFiles/mygame.dir/src/shatter.cpp.obj"
+  "CMakeFiles/mygame.dir/src/shatter.cpp.obj.d"
   "libmygame.dll.a"
   "mygame.exe"
   "mygame.exe.manifest"

@@ -161,12 +161,25 @@ int main(void)
 	std::cout << "hello beginning" << std::endl;
 	bool examplebool = false;
 	Rectangle wall = {350, 500, 200, 200};
+	Rectangle secondexample = {100, 500, 200, 200};
+	Rectangle third = {230, 700, 200, 200};
+	Rectangle fourth = {230, 300, 200, 200};
 	// Initialize CollideExample with the wall rectangle
 	CollideExample wallExample = {{wall.x, wall.y}, (int)wall.width, (int)wall.height, RED};
-	std::vector<CollideExample> wallrect = {wallExample};
+	CollideExample secondexamplewall = {{secondexample.x, secondexample.y}, (int)secondexample.width, (int)secondexample.height, BLUE};
+	CollideExample thirdwall = {{third.x, third.y}, (int)third.width, (int)third.height, GREEN};
+	CollideExample fourthwall = {{fourth.x, fourth.y}, (int)fourth.width, (int)fourth.height, YELLOW};
+	std::vector<CollideExample> wallrect = {wallExample, secondexamplewall, thirdwall, fourthwall};
+
+	// Shatter animation
+	Rectangle exampleofrectanimation = {200, 200, 400, 200};
+	
+	bool exploded = false;
+    bool collided = false;
 	// MAIN LOOP
 	while (!WindowShouldClose())
 	{
+		float deltaTime = GetFrameTime();
 		BeginDrawing();
 		ClearBackground(BLACK);
 		Generate(mapgenerationInformation, map, tilesize, scalefactor, tileSheet);
@@ -176,8 +189,34 @@ int main(void)
 		PlayerCreation(player, enemies, minerals, trees, villagers, inventories, InteractedVillager);
 		DrawEntities(minerals, trees, enemies, villagers);
 		DrawRectangleRec(wall, RED);
-		WeaponSystem(player, wallrect);
+		DrawRectangleRec(secondexample, BLUE);
+		DrawRectangleRec(third, GREEN);
+		DrawRectangleRec(fourth, YELLOW);
+		WeaponSystem(player, wallrect, collided);
 		interact(examplebool);
+
+		if (IsKeyPressed(KEY_SPACE) && !exploded)
+		{
+			InitShatterPieces(exampleofrectanimation);
+			exploded = true; // Set exploded to true
+		}
+        if(IsKeyPressed(KEY_R)){
+			exploded = false;
+		}
+		UpdateShatterPieces(deltaTime);
+
+		// Draw
+		BeginDrawing();
+		ClearBackground(RAYWHITE);
+
+		if (!exploded)
+		{
+			DrawRectangleRec(exampleofrectanimation, BLUE); // Draw the original rectangle
+		}
+		else
+		{
+			DrawShatterPieces(); // Draw the shattered pieces
+		}
 
 		// Imgui Stuff
 #pragma region imgui
@@ -190,7 +229,7 @@ int main(void)
 #pragma endregion
 
 		ImGui::Begin("Debugger");
-
+        ImGui::Text("Press R to reset the shatter animation");
 		ImGui::End();
 #pragma region imgui
 		rlImGuiEnd();
