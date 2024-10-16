@@ -8,6 +8,7 @@ set(OLD_GLOB
   "C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/src/Map_generation.cpp"
   "C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/src/gamelogic.cpp"
   "C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/src/main.cpp"
+  "C:/Users/elias/Downloads/GameChallenge/raylibCmakeSetup-master/src/shatter.cpp"
   )
 if(NOT "${NEW_GLOB}" STREQUAL "${OLD_GLOB}")
   message("-- GLOB mismatch!")

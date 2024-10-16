@@ -344,6 +344,30 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\mygame.dir\build.make CMakeFiles/mygame.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
+src/shatter.obj: src/shatter.cpp.obj
+.PHONY : src/shatter.obj
+
+# target to build an object file
+src/shatter.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\mygame.dir\build.make CMakeFiles/mygame.dir/src/shatter.cpp.obj
+.PHONY : src/shatter.cpp.obj
+
+src/shatter.i: src/shatter.cpp.i
+.PHONY : src/shatter.i
+
+# target to preprocess a source file
+src/shatter.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\mygame.dir\build.make CMakeFiles/mygame.dir/src/shatter.cpp.i
+.PHONY : src/shatter.cpp.i
+
+src/shatter.s: src/shatter.cpp.s
+.PHONY : src/shatter.s
+
+# target to generate assembly for a file
+src/shatter.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\mygame.dir\build.make CMakeFiles/mygame.dir/src/shatter.cpp.s
+.PHONY : src/shatter.cpp.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -374,6 +398,9 @@ help:
 	@echo ... src/main.obj
 	@echo ... src/main.i
 	@echo ... src/main.s
+	@echo ... src/shatter.obj
+	@echo ... src/shatter.i
+	@echo ... src/shatter.s
 .PHONY : help
 
 

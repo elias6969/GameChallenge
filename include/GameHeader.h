@@ -75,6 +75,13 @@ struct CollideExample{
     Color color;
 };
 
+typedef struct {
+    Rectangle rect;   // The rectangle representing the piece
+    Vector2 velocity; // The velocity vector for the piece
+    Color color;      // Color of the piece
+    float lifetime;   // Time until the piece disappears
+} ShatterPiece;
+
 extern AIEntity ai;
 
 void UpdateAI(AIEntity &ai);
@@ -96,10 +103,15 @@ extern Texture2D Storemineraltexture;
 
 void storeTexture(const char* filepath);
 
-void WeaponSystem(Player &player, const std::vector<CollideExample> &Wall);
+void WeaponSystem(Player &player, const std::vector<CollideExample> &Wall, bool &collided);
 
 void DrawAI(const AIEntity &ai);
 
 void Delete(const std::vector<Texture2D> &mineraltexture);
+
+//Shatter animation part
+void InitShatterPieces(Rectangle rect);
+void UpdateShatterPieces(float deltaTime);
+void DrawShatterPieces();
 
 #endif
