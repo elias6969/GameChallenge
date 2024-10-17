@@ -494,7 +494,7 @@ Vector2 Vector2Normalize(Vector2 v)
     }
 }
 
-void WeaponSystem(Player &player, const std::vector<CollideExample> &Wall, bool &collided)
+void WeaponSystem(Player &player, const std::vector<CollideExample> &Wall, bool &collided, bool &explod)
 {
     Vector2 mousePosition = GetMousePosition();
     static Vector2 EndPosition = {0.0f, 0.0f};
@@ -510,6 +510,7 @@ void WeaponSystem(Player &player, const std::vector<CollideExample> &Wall, bool 
         currentposition = player.PlayerPosition;
         EndPosition = mousePosition;
         collided = false;
+        explod = false;
     }
 
     Vector2 direction = Vector2Normalize({EndPosition.x - currentposition.x, EndPosition.y - currentposition.y});
@@ -531,6 +532,9 @@ void WeaponSystem(Player &player, const std::vector<CollideExample> &Wall, bool 
 
         if (CheckCollisionCircleRec(currentposition, 5.0f, wallrect))
         {
+            if(wall.type == "exampletype"){
+                explod = true;
+            }
             // Determine wall normal based on collision side
             Vector2 wallNormal = {0, 0};
             float distanceToLeft = currentposition.x - wallrect.x;                       // Left side
@@ -571,7 +575,6 @@ void WeaponSystem(Player &player, const std::vector<CollideExample> &Wall, bool 
             velocity.x = velocity.x - 2 * dotProduct * wallNormal.x;
             velocity.y = velocity.y - 2 * dotProduct * wallNormal.y;
 
-            // Adjust position to move the projectile out of the wall slightly
             currentposition.x += wallNormal.x * 5.0f; // Move out based on the normal direction
             currentposition.y += wallNormal.y * 5.0f; // Move out based on the normal direction
 

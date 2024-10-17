@@ -160,19 +160,14 @@ int main(void)
 	bool InteractedVillager = false;
 	std::cout << "hello beginning" << std::endl;
 	bool examplebool = false;
-	Rectangle wall = {350, 500, 200, 200};
-	Rectangle secondexample = {100, 500, 200, 200};
-	Rectangle third = {230, 700, 200, 200};
-	Rectangle fourth = {230, 300, 200, 200};
-	// Initialize CollideExample with the wall rectangle
-	CollideExample wallExample = {{wall.x, wall.y}, (int)wall.width, (int)wall.height, RED};
-	CollideExample secondexamplewall = {{secondexample.x, secondexample.y}, (int)secondexample.width, (int)secondexample.height, BLUE};
-	CollideExample thirdwall = {{third.x, third.y}, (int)third.width, (int)third.height, GREEN};
-	CollideExample fourthwall = {{fourth.x, fourth.y}, (int)fourth.width, (int)fourth.height, YELLOW};
-	std::vector<CollideExample> wallrect = {wallExample, secondexamplewall, thirdwall, fourthwall};
-
+	Rectangle wall = {350, 500, 200, 200};	
 	// Shatter animation
-	Rectangle exampleofrectanimation = {200, 200, 400, 200};
+	//Rectangle exampleofrectanimation = {200, 200, 400, 200};
+	Rectangles exampleofrect = {200, 200, 400, 200, "exampleType"};
+	// Initialize CollideExample with the wall rectangle
+	CollideExample wallExample = {{wall.x, wall.y}, (int)wall.width, (int)wall.height, RED, "null"};
+	CollideExample explosionwall = {{exampleofrect.x, exampleofrect.y}, (int)exampleofrect.width, (int)exampleofrect.height, BLUE, "exampletype"};
+	std::vector<CollideExample> wallrect = {wallExample, explosionwall};
 	
 	bool exploded = false;
     bool collided = false;
@@ -189,16 +184,12 @@ int main(void)
 		PlayerCreation(player, enemies, minerals, trees, villagers, inventories, InteractedVillager);
 		DrawEntities(minerals, trees, enemies, villagers);
 		DrawRectangleRec(wall, RED);
-		DrawRectangleRec(secondexample, BLUE);
-		DrawRectangleRec(third, GREEN);
-		DrawRectangleRec(fourth, YELLOW);
-		WeaponSystem(player, wallrect, collided);
+		WeaponSystem(player, wallrect, collided, exploded);
 		interact(examplebool);
 
-		if (IsKeyPressed(KEY_SPACE) && !exploded)
+		if (!exploded)
 		{
-			InitShatterPieces(exampleofrectanimation);
-			exploded = true; // Set exploded to true
+			InitShatterPieces((Rectangle){exampleofrect.x, exampleofrect.y, exampleofrect.width, exampleofrect.height});
 		}
         if(IsKeyPressed(KEY_R)){
 			exploded = false;
@@ -211,7 +202,7 @@ int main(void)
 
 		if (!exploded)
 		{
-			DrawRectangleRec(exampleofrectanimation, BLUE); // Draw the original rectangle
+			DrawRectangleRec((Rectangle){exampleofrect.x, exampleofrect.y, exampleofrect.width, exampleofrect.height}, BLUE); // Draw the original rectangle
 		}
 		else
 		{

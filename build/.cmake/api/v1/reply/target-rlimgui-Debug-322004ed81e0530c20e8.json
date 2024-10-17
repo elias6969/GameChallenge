@@ -109,11 +109,11 @@
 	[
 		{
 			"backtrace" : 2,
-			"id" : "glfw::@7d621aed3b7f11e3471d"
+			"id" : "raylib::@dd0063249b2156dc70e7"
 		},
 		{
 			"backtrace" : 2,
-			"id" : "raylib::@dd0063249b2156dc70e7"
+			"id" : "glfw::@7d621aed3b7f11e3471d"
 		},
 		{
 			"backtrace" : 2,
