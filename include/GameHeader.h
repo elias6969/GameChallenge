@@ -73,6 +73,7 @@ struct CollideExample{
     int Width;
     int Height;
     Color color;
+    const char* type;
 };
 
 typedef struct {
@@ -80,7 +81,16 @@ typedef struct {
     Vector2 velocity; // The velocity vector for the piece
     Color color;      // Color of the piece
     float lifetime;   // Time until the piece disappears
+    const char *type; //Type of wall(if it can explode or not)
 } ShatterPiece;
+struct Rectangles {
+    float x;
+    float y;
+    float width;
+    float height;
+    const char* type;
+    
+};
 
 extern AIEntity ai;
 
@@ -103,7 +113,7 @@ extern Texture2D Storemineraltexture;
 
 void storeTexture(const char* filepath);
 
-void WeaponSystem(Player &player, const std::vector<CollideExample> &Wall, bool &collided);
+void WeaponSystem(Player &player, const std::vector<CollideExample> &Wall, bool &collided, bool &explod);
 
 void DrawAI(const AIEntity &ai);
 
