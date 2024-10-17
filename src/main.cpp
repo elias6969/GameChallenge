@@ -16,19 +16,6 @@
 #include <GameHeader.h>
 #include "MapGeneration.h"
 
-void interact(bool &var)
-{
-	int x = 1;
-
-	if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
-	{
-		if (x == 1)
-		{
-			var = true;
-		}
-	}
-}
-
 int main(void)
 {
 	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -160,20 +147,28 @@ int main(void)
 	bool InteractedVillager = false;
 	std::cout << "hello beginning" << std::endl;
 	bool examplebool = false;
-	Rectangle wall = {350, 500, 200, 200};	
+	Rectangle wall = {350, 500, 200, 200};
 	// Shatter animation
-	//Rectangle exampleofrectanimation = {200, 200, 400, 200};
+	// Rectangle exampleofrectanimation = {200, 200, 400, 200};
 	Rectangles exampleofrect = {200, 200, 400, 200, "exampleType"};
 	// Initialize CollideExample with the wall rectangle
 	CollideExample wallExample = {{wall.x, wall.y}, (int)wall.width, (int)wall.height, RED, "null"};
 	CollideExample explosionwall = {{exampleofrect.x, exampleofrect.y}, (int)exampleofrect.width, (int)exampleofrect.height, BLUE, "exampletype"};
 	std::vector<CollideExample> wallrect = {wallExample, explosionwall};
-	
+
+	bool equiped = false;
 	bool exploded = false;
-    bool collided = false;
+	bool collided = false;
+
+	// Here is for play around code
+	Vector2 initialPosition = {500, 500};
+	Rectangle dragrectangle = {initialPosition.x, initialPosition.y, 100, 100};
+
 	// MAIN LOOP
 	while (!WindowShouldClose())
 	{
+		Vector2 mousePos = GetMousePosition();
+		bool ishovering = isMouseOverRectangle(dragrectangle);
 		float deltaTime = GetFrameTime();
 		BeginDrawing();
 		ClearBackground(BLACK);
@@ -184,18 +179,35 @@ int main(void)
 		PlayerCreation(player, enemies, minerals, trees, villagers, inventories, InteractedVillager);
 		DrawEntities(minerals, trees, enemies, villagers);
 		DrawRectangleRec(wall, RED);
-		WeaponSystem(player, wallrect, collided, exploded);
-		interact(examplebool);
+		if (IsKeyPressed(KEY_E))
+		{
+			equiped = true;
+		}
+		else if (IsKeyPressed(KEY_Q))
+		{
+			equiped = false;
+		}
+		if (equiped)
+			WeaponSystem(player, wallrect, collided, exploded);
 
 		if (!exploded)
 		{
 			InitShatterPieces((Rectangle){exampleofrect.x, exampleofrect.y, exampleofrect.width, exampleofrect.height});
 		}
-        if(IsKeyPressed(KEY_R)){
+		if (IsKeyPressed(KEY_R))
+		{
 			exploded = false;
 		}
 		UpdateShatterPieces(deltaTime);
-
+        
+		//Test for seeing if the hovering works
+		if (ishovering && IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+		{
+			initialPosition = mousePos;
+			dragrectangle.x = initialPosition.x - dragrectangle.width / 2;	// Update x position of the rectangle
+			dragrectangle.y = initialPosition.y - dragrectangle.height / 2; // Update y position of the rectangle
+		}
+		DrawRectangle(dragrectangle.x, dragrectangle.y, dragrectangle.width, dragrectangle.height, BLACK);
 		// Draw
 		BeginDrawing();
 		ClearBackground(RAYWHITE);
@@ -220,7 +232,7 @@ int main(void)
 #pragma endregion
 
 		ImGui::Begin("Debugger");
-        ImGui::Text("Press R to reset the shatter animation");
+		ImGui::Text("Press R to reset the shatter animation");
 		ImGui::End();
 #pragma region imgui
 		rlImGuiEnd();

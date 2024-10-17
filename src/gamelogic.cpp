@@ -159,28 +159,63 @@ void DrawVillager(const Villager &villager)
 }
 
 // Function to draw a trade interface
-void DrawTradeInterface(const Villager &villager, bool &villagerinteraction)
+void DrawTradeInterface(const Villager &villager, bool &villagerinteraction, int tradesize[4][3], int Tradtilesize, std::vector<Mineral> minerals)
 {
+    float scalefactor = 1.0f; // Scaling factor for size adjustments
+    int rows = 3;
+    int columns = 4;
+    int offset = 25;
+
     // Draw a background rectangle for the trade window
     DrawRectangle(200, 200, 400, 300, Fade(GRAY, 0.8f)); // Semi-transparent background
+
+    // Title text for the trade interface
+    DrawText("Trade Interface", 280, 180, 24, WHITE); // Title for context
+
+    // Draw the trade grid
+    for (int y = 0; y < rows; y++)
+    {
+        for (int x = 0; x < columns; x++)
+        {
+            // Calculate position for each box in the grid
+            Vector2 tradepos = {
+                220 + offset + (x * (Tradtilesize + 10) * scalefactor), // X position with some spacing
+                230 + offset + (y * (Tradtilesize + 10) * scalefactor)  // Y position with some spacing
+            };
+
+            // Draw each grid box
+            DrawRectangleV(tradepos, (Vector2){Tradtilesize * scalefactor, Tradtilesize * scalefactor}, Fade(DARKGRAY, 0.9f));
+
+            // Add some text in the box (like trade info)
+           for(const Mineral mineral: minerals){
+            DrawText(mineral.type, tradepos.x + 10, tradepos.y + 10, 16, WHITE); // Example item name text
+            DrawRectangle(tradepos.x + 10, tradepos.y + 10, Tradtilesize/2, Tradtilesize/2, mineral.color);
+           }
+
+        }
+    }
 
     // Draw the villager's name
     DrawText(villager.name, 250, 220, 20, WHITE);
 
-    // Draw the trade items
-    int yOffset = 250; // Starting position for the first item
+    // Draw the trade items under the grid
+    int yOffset = 320; // Adjust the position so it's under the grid
     for (const TradeItem &item : villager.tradeItems)
     {
+        // Display the item name
         DrawText(item.name.c_str(), 250, yOffset, 20, WHITE);
+
+        // Display the item value
         DrawText(("Value: " + std::to_string(item.value)).c_str(), 400, yOffset, 20, WHITE);
+
         yOffset += 30; // Space between items
     }
 
-    // Draw close button (e.g., a simple rectangle for now)
-    Rectangle rect = {550, 200, 40, 40};
-    DrawRectangle(550, 200, 40, 40, RED); // Close button (X)
-    DrawText("X", 560, 210, 20, WHITE);   // X to close
-    bool isHovering = isMouseOverRectangle(rect);
+    // Draw the close button (X)
+    Rectangle closeBtn = {550, 200, 40, 40};
+    DrawRectangleRec(closeBtn, isMouseOverRectangle(closeBtn) ? MAROON : RED); // Button turns darker when hovered
+    DrawText("X", 560, 210, 20, WHITE);
+    bool isHovering = isMouseOverRectangle(closeBtn);
 
     if (isHovering && IsMouseButtonPressed(MOUSE_LEFT_BUTTON))
     {
@@ -188,24 +223,13 @@ void DrawTradeInterface(const Villager &villager, bool &villagerinteraction)
     }
 }
 
-template <typename Entity>
-void VillagerInteraction(const Entity &entity)
-{
-    // Ensure the entity is of type Villager
-    if constexpr (std::is_same_v<Entity, Villager>)
-    {
-        DrawText("Hey, you're trading with me!", entity.position.x, entity.position.y, 20, BLACK);
-    }
-    else
-    {
-        std::cout << "Error: Entity is not a villager!" << std::endl;
-    }
-}
-
 // Handle villager interaction with speech bubble and typing effect
 void HandleVillagerInteraction(const Villager &villager, float interactionTime, bool &villagerinteraction)
 {
-    DrawTradeInterface(villager, villagerinteraction);
+    int grid[4][3];
+    int tradesize = 70; 
+    std::vector<Mineral> minerals;
+    DrawTradeInterface(villager, villagerinteraction, grid, tradesize, minerals);
 }
 
 /*
@@ -532,7 +556,8 @@ void WeaponSystem(Player &player, const std::vector<CollideExample> &Wall, bool 
 
         if (CheckCollisionCircleRec(currentposition, 5.0f, wallrect))
         {
-            if(wall.type == "exampletype"){
+            if (wall.type == "exampletype")
+            {
                 explod = true;
             }
             // Determine wall normal based on collision side
